@@ -130,7 +130,7 @@ def remove_chunks(input_ids, labels, tokenizer, first_sep_pos, second_sep_pos,
     
     # Handle labels similarly
     if len(new_reasoning_tensor) > 0:
-        reasoning_labels = torch.full((len(new_reasoning_tensor),), -100, device=labels.device, dtype=labels.dtype)
+        reasoning_labels = labels[first_sep_pos + 1:second_sep_pos]
     else:
         reasoning_labels = torch.tensor([], device=labels.device, dtype=labels.dtype)
     
