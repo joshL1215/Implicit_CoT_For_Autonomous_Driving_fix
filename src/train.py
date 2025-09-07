@@ -16,6 +16,7 @@ from model import ImplicitModel
 from configuration_model import ImplicitModelConfig
 from data import CoTDataset, CoTDataCollator, extract_answer
 from utils import get_sep_position, batch_ids, save_model
+from torch.nn.utils.rnn import pad_sequence
 
 
 torch.backends.cuda.matmul.allow_tf32 = True
@@ -212,8 +213,8 @@ def evaluate(dataloader, tokenizer, device, ctx, model, max_new_tokens, schedule
                 input_ids_all_tmp.append(new_input_ids)
                 labels_tmp.append(new_labels)
             
-            input_ids_all = batch_ids(input_ids_all_tmp, tokenizer.eos_token_id, device, input_ids_all.dtype)
-            labels = batch_ids(labels_tmp, -100, device, input_ids.dtype)
+            input_ids_all = pad_sequence(input_ids_all_tmp, batch_first=True, padding_value=tokenizer.eos_token_id).to(device)
+            labels = pad_sequence(labels_tmp, batch_first=True, padding_value=-100).to(device)
 
         with ctx:
             if keep_position:
