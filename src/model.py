@@ -32,7 +32,7 @@ class ImplicitModel(nn.Module):
         logits = outputs.logits
 
         labels_pred = logits.argmax(-1)
-        mask = labels[...,1:].ge(0)
+        mask = labels.ne(-100) ############## Mask set to -100 means it only ignores padding now, everything else is included ##############
         correct_tokens = ((labels_pred[...,:-1] == labels[...,1:]) * mask).sum()
         total_tokens = mask.sum()
         token_accuracy = correct_tokens / total_tokens
