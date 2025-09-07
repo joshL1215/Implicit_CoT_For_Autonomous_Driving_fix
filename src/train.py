@@ -9,7 +9,8 @@ import random
 import torch
 
 from torch.utils.data import DataLoader
-from transformers import AdamW
+from torch.optim import AdamW
+from transformers import get_linear_schedule_with_warmup
 
 from model import ImplicitModel
 from configuration_model import ImplicitModelConfig
